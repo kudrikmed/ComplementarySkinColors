@@ -1,0 +1,8 @@
+# Venv
+venv/
+
+# Temp
+temp/
+
+# Logs
+logs/
