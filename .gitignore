@@ -6,3 +6,9 @@ temp/*
 
 # Logs
 logs/*
+
+# Pycharm
+.idea/*
+
+# Pytest cache
+.pytest_cache/*
