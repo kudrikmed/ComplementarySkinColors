@@ -203,7 +203,41 @@ class SkinColor:
         return color_bar
 
     @staticmethod
-    def plot_complementary_color_bar(color_information):
+    def make_complementary_color(color, scheme):
+        """
+        Calculate and return the complementary color of the given color based on the specified scheme.
+
+        Args:
+            color (list[int]): A list representing the RGB color to calculate the complementary color for.
+                               It should contain three integer values between 0 and 255, inclusive, representing
+                               the red, green, and blue components of the color.
+            scheme (str): A string specifying the color transformation scheme. Supported schemes are:
+                          - "invert_green": Inverts the green component of the color.
+                          - "invert_blue": Inverts the blue component of the color.
+                          - "invert_green_blue": Inverts both the green and blue components of the color.
+
+        Returns:
+            list[int]: A list representing the RGB values of the complementary color.
+                       The returned list will have the same format as the input color.
+
+        Note:
+            If an unsupported or invalid scheme is provided, the function will return the original color unchanged.
+
+        Example:
+            >>> original_color = [255, 128, 64]
+            >>> complementary_color = MyClass.make_complementary_color(original_color, "invert_green_blue")
+            >>> print(complementary_color)
+            [255, 127, 191]
+        """
+        schemes = {
+            "invert_green": [color[0], 255 - color[1], color[2]],
+            "invert_blue": [color[0], color[1], 255 - color[2]],
+            "invert_green_blue": [color[0], 255 - color[1], 255 - color[2]],
+        }
+
+        return schemes.get(scheme, color)
+
+    def plot_complementary_color_bar(self, color_information):
         """
         Creates a complementary color bar representation based on color information.
 
@@ -213,22 +247,29 @@ class SkinColor:
         Returns:
             numpy.ndarray: A complementary color bar image.
         """
-        color_bar = np.zeros((100, 500, 3), dtype=np.uint8)
-        bar_height = color_bar.shape[0] // 4
+        # Initialize the color bar image
+        color_bar_height = 100
+        color_bar_width = 500
+        color_bar = np.zeros((color_bar_height, color_bar_width, 3), dtype=np.uint8)
+        bar_height = color_bar_height // 4
 
         top_x = 0
+
+        # Iterate through color information
         for info in color_information:
             color = tuple(map(int, info['color']))
-            bottom_x = int(top_x + round(info["color_percentage"] * color_bar.shape[1]))
+            bottom_x = int(top_x + round(info["color_percentage"] * color_bar_width))
 
-            complementary_color_1 = [color[0], 255 - color[1], color[2]]
-            complementary_color_2 = [color[0], color[1], 255 - color[2]]
-            complementary_color_3 = [color[0], 255 - color[1], 255 - color[2]]
+            # Define color schemes
+            color_schemes = ["original", "invert_green", "invert_blue", "invert_green_blue"]
 
-            for i, comp_color in enumerate(
-                    [color, complementary_color_1, complementary_color_2, complementary_color_3]):
+            for i, scheme in enumerate(color_schemes):
                 start_y = i * bar_height
                 end_y = (i + 1) * bar_height
+                if scheme == "original":
+                    comp_color = color
+                else:
+                    comp_color = self.make_complementary_color(color, scheme=scheme)
                 cv2.rectangle(color_bar, (int(top_x), start_y), (bottom_x, end_y), comp_color, -1)
 
             top_x = bottom_x
@@ -272,3 +313,64 @@ class SkinColor:
         plt.imshow(complementary_colour_bar)
         plt.savefig('temp/complementary_skin_colors.png', bbox_inches='tight')
         plt.close()
+
+    def get_colors(self, num_dominant_colors=5):
+        """
+          Extract dominant and complementary colors from an image of a face with optional thresholding.
+
+          Args:
+              num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.
+
+          Returns:
+              list: A list of dictionaries, each containing information about a dominant color and its complementary colors.
+                  Each dictionary has the following keys:
+                  - 'cluster_index': The cluster index of the dominant color.
+                  - 'original_color': The original RGB color value as a tuple.
+                  - 'color_percentage': The percentage of the original color in the image.
+                  - 'complement_color_scheme_invert_green': Complementary color using the "invert_green" scheme as an RGB tuple.
+                  - 'complement_color_scheme_invert_blue': Complementary color using the "invert_blue" scheme as an RGB tuple.
+                  - 'complement_color_scheme_invert_green_blue': Complementary color using the "invert_green_blue" scheme as an RGB tuple.
+
+          Note:
+              This function processes an image of a face to extract dominant colors and their complementary colors.
+              It uses various internal methods such as 'extract_face', 'extract_skin', 'extract_dominant_color', and 'make_complementary_color'.
+              The 'num_dominant_colors' parameter controls the number of dominant colors to extract from the image.
+              Complementary colors are calculated using three different color schemes: "invert_green," "invert_blue," and "invert_green_blue."
+
+          Example:
+              # Create an instance of the class
+              face_color_extractor = FaceColorExtractor('path_to_image.jpg')
+
+              # Get dominant and complementary colors
+              dominant_and_complementary_colors = face_color_extractor.get_colors(num_dominant_colors=5)
+          """
+        image = cv2.imread(self.image, cv2.COLOR_BGR2RGB)
+        face = self.extract_face(image)
+        skin = self.extract_skin(face)
+        dominant_colors = self.extract_dominant_color(skin,
+                                                      number_of_colors=num_dominant_colors,
+                                                      has_thresholding=True)
+
+        complementary_colors = []
+
+        def get_complementary_colors(color):
+
+            schemes = ["invert_green", "invert_blue", "invert_green_blue"]
+            complementary_colors_info = {
+                'cluster_index': color['cluster_index'],
+                'original_color': tuple(map(int, color['color'])),
+                'color_percentage': color['color_percentage']
+            }
+
+            for scheme in schemes:
+                complement_color = self.make_complementary_color(color['color'], scheme=scheme)
+                complement_color = tuple((int(c) for c in complement_color))
+                complementary_colors_info[f'complement_color_scheme_{scheme}'] = complement_color
+
+            return complementary_colors_info
+
+        for color_info in dominant_colors:
+            complementary_colors.append(get_complementary_colors(color_info))
+
+        return complementary_colors
+
