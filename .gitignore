@@ -1,8 +1,8 @@
 # Venv
-venv/
+venv/*
 
 # Temp
-temp/
+temp/*
 
 # Logs
-logs/
+logs/*

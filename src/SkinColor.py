@@ -3,249 +3,270 @@ import cv2
 from sklearn.cluster import KMeans
 from collections import Counter
 from matplotlib import pyplot as plt
-import mediapipe as mp
-import pandas as pd
+from src.SkinExtractor import SkinExtractor
+from src.FaceExtractor import FaceExtractor
 
 
 class SkinColor:
+    """
+    A class for extracting and analyzing dominant skin colors from an input image.
+
+    Methods:
+        extract_dominant_color(image, number_of_colors=5, has_thresholding=False) -> list:
+            Extracts and returns dominant skin colors from the input image.
+
+        plot_color_bar(color_information) -> numpy.ndarray:
+            Creates a color bar representation based on color information.
+
+        plot_complementary_color_bar(color_information) -> numpy.ndarray:
+            Creates a complementary color bar representation based on color information.
+
+        draw_skin_colors_plot(num_dominant_colors=5):
+            Generates and saves a plot of dominant skin colors from the input image.
+
+        draw_complementary_skin_colors_plot(num_dominant_colors=5):
+            Generates and saves a plot of complementary skin colors from the input image.
+
+    Static Methods:
+        extract_face(image) -> numpy.ndarray:
+            Extracts and returns the face region from the input image.
+
+        extract_skin(image) -> numpy.ndarray:
+            Extracts and returns the skin region from the input image.
+
+        remove_black(estimator_labels, estimator_cluster) -> (Counter, numpy.ndarray, bool):
+            Removes black color from the cluster and updates occurrence and cluster accordingly.
+
+        get_color_information(estimator_labels, estimator_cluster, has_thresholding=False) -> list:
+            Retrieves and returns color information based on cluster labels and cluster centers.
+
+    Example Usage:
+        # Create a SkinColor instance with an input image
+        skin_color = SkinColor("input_image.jpg")
+
+        # Generate a plot of dominant skin colors
+        skin_color.draw_skin_colors_plot()
+
+        # Generate a plot of complementary skin colors
+        skin_color.draw_complementary_skin_colors_plot()
+    """
 
     def __init__(self, image):
         self.image = image
+        """
+        Initializes a SkinColor instance with the input image.
+
+        Args:
+            image (str): The path to the input image.
+        """
 
     @staticmethod
     def extract_face(image):
-        mp_face_mesh = mp.solutions.face_mesh
-        face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
-        results = face_mesh.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        landmarks = results.multi_face_landmarks[0]
-        face_oval = mp_face_mesh.FACEMESH_FACE_OVAL
-        df = pd.DataFrame(list(face_oval), columns=["p1", "p2"])
-
-        routes_idx = []
-
-        p1 = df.iloc[0]["p1"]
-        p2 = df.iloc[0]["p2"]
-
-        for i in range(0, df.shape[0]):
-            obj = df[df["p1"] == p2]
-            p1 = obj["p1"].values[0]
-            p2 = obj["p2"].values[0]
-            route_idx = []
-            route_idx.append(p1)
-            route_idx.append(p2)
-            routes_idx.append(route_idx)
-
-        routes = []
-
-        for source_idx, target_idx in routes_idx:
-            source = landmarks.landmark[source_idx]
-            target = landmarks.landmark[target_idx]
-
-            relative_source = (int(image.shape[1] * source.x), int(image.shape[0] * source.y))
-            relative_target = (int(image.shape[1] * target.x), int(image.shape[0] * target.y))
-
-            routes.append(relative_source)
-            routes.append(relative_target)
-
-        mask = np.zeros((image.shape[0], image.shape[1]))
-        mask = cv2.fillConvexPoly(mask, np.array(routes), 1)
-        mask = mask.astype(bool)
-
-        out = np.zeros_like(image)
-        out[mask] = image[mask]
-
-        return out
+        face = FaceExtractor.extract_face(image)
+        return face
 
     @staticmethod
     def extract_skin(image):
-        # Taking a copy of the image
-        img = image.copy()
-        # Converting from BGR Colours Space to HSV
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-        # Defining HSV Threadholds
-        lower_threshold = np.array([0, 48, 80], dtype=np.uint8)
-        upper_threshold = np.array([20, 255, 255], dtype=np.uint8)
-
-        # Single Channel mask,denoting presence of colours in the about threshold
-        skin_mask = cv2.inRange(img, lower_threshold, upper_threshold)
-
-        # Cleaning up mask using Gaussian Filter
-        skin_mask = cv2.GaussianBlur(skin_mask, (3, 3), 0)
-
-        # Extracting skin from the threshold mask
-        skin = cv2.bitwise_and(img, img, mask=skin_mask)
-
-        # Return the Skin image
-        return cv2.cvtColor(skin, cv2.COLOR_HSV2BGR)
+        skin = SkinExtractor.extract_skin(image)
+        return skin
 
     @staticmethod
     def remove_black(estimator_labels, estimator_cluster):
-        # Check for black
-        has_black = False
+        """
+        Removes black color from the cluster and updates occurrence and cluster accordingly.
 
-        # Get the total number of occurance for each color
-        occurance_counter = Counter(estimator_labels)
+        Args:
+            estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.
+            estimator_cluster (numpy.ndarray): The cluster centers representing color values.
 
-        # Quick lambda function to compare to lists
-        compare = lambda x, y: Counter(x) == Counter(y)
+        Returns:
+            Tuple[Counter, numpy.ndarray, bool]: A tuple containing:
+                - Counter: Occurrence of each color label.
+                - numpy.ndarray: Updated cluster centers after black color removal.
+                - bool: Whether black color was found and removed.
+        """
+        # Get the total number of occurrences for each color
+        occurrence_counter = Counter(estimator_labels)
 
-        # Loop through the most common occuring color
-        for x in occurance_counter.most_common(len(estimator_cluster)):
+        # Iterate over the most common occurring colors
+        for color_index, (count, _) in enumerate(occurrence_counter.most_common(len(estimator_cluster))):
+            color = estimator_cluster[color_index].astype(int)
 
-            # Quick List comprehension to convert each of RBG Numbers to int
-            color = [int(i) for i in estimator_cluster[x[0]].tolist()]
+            # Check if the color is [0, 0, 0] (black)
+            if np.all(color == [0, 0, 0]):
+                # Delete the occurrence
+                del occurrence_counter[color_index]
+                # Remove the cluster
+                estimator_cluster = np.delete(estimator_cluster, color_index, 0)
+                return occurrence_counter, estimator_cluster, True
 
-            # Check if the color is [0,0,0] that if it is black
-            if compare(color, [0, 0, 0]) == True:
-                # delete the occurance
-                del occurance_counter[x[0]]
-                # remove the cluster
-                has_black = True
-                estimator_cluster = np.delete(estimator_cluster, x[0], 0)
-                break
-
-        return (occurance_counter, estimator_cluster, has_black)
+        return occurrence_counter, estimator_cluster, False
 
     def get_color_information(self, estimator_labels, estimator_cluster, has_thresholding=False):
-        # Output list variable to return
+        """
+        Retrieves color information based on cluster labels and cluster centers.
+
+        Args:
+            estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.
+            estimator_cluster (numpy.ndarray): The cluster centers representing color values.
+            has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.
+                Default is False.
+
+        Returns:
+            list: A list of dictionaries containing information about dominant colors, including:
+                - 'cluster_index' (int): Index of the color cluster.
+                - 'color' (list): RGB color values.
+                - 'color_percentage' (float): Percentage of pixels with the dominant color.
+
+        Note:
+            If `has_thresholding` is set to True and black color is removed, the 'cluster_index' values
+            are adjusted accordingly to maintain consistency with the original cluster labeling.
+        """
         color_information = []
 
-        # Check for Black
-        has_black = False
-
-        # If a mask has be applied, remove black
         if has_thresholding:
-
-            (occurance, cluster, black) = self.remove_black(estimator_labels, estimator_cluster)
-            occurance_counter = occurance
+            occurrence, cluster, has_black = self.remove_black(estimator_labels, estimator_cluster)
+            occurrence_counter = occurrence
             estimator_cluster = cluster
-            has_black = black
-
         else:
-            occurance_counter = Counter(estimator_labels)
+            occurrence_counter = Counter(estimator_labels)
 
-        # Get the total sum of all the predicted occurances
-        totalOccurance = sum(occurance_counter.values())
+        total_occurrence = sum(occurrence_counter.values())
 
-        # Loop through all the predicted colors
-        for x in occurance_counter.most_common(len(estimator_cluster)):
-            index = (int(x[0]))
+        for x in occurrence_counter.most_common(len(estimator_cluster)):
+            index = int(x[0])
 
-            # Quick fix for index out of bound when there is no threshold
-            index = (index - 1) if ((has_thresholding & has_black) & (int(index) != 0)) else index
+            if has_thresholding and has_black and index != 0:
+                index -= 1
 
-            # Get the color number into a list
             color = estimator_cluster[index].tolist()
+            color_percentage = x[1] / total_occurrence
 
-            # Get the percentage of each color
-            color_percentage = (x[1] / totalOccurance)
+            color_info = {
+                "cluster_index": index,
+                "color": color,
+                "color_percentage": color_percentage
+            }
 
-            # make the dictionay of the information
-            color_info = {"cluster_index": index, "color": color, "color_percentage": color_percentage}
-
-            # Add the dictionary to the list
             color_information.append(color_info)
 
         return color_information
 
     def extract_dominant_color(self, image, number_of_colors=5, has_thresholding=False):
-        # Quick Fix Increase cluster counter to neglect the black(Read Article)
+        """
+        Extracts and returns dominant skin colors from the input image.
+
+        Args:
+            image (numpy.ndarray): The input image in BGR color space.
+            number_of_colors (int, optional): The number of dominant colors to extract. Default is 5.
+            has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.
+                Default is False.
+
+        Returns:
+            list: A list of dictionaries containing information about dominant skin colors.
+        """
         if has_thresholding:
             number_of_colors += 1
 
-        # Taking Copy of the image
         img = image.copy()
-
-        # Convert Image into RGB Colours Space
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = img.reshape((-1, 3))
 
-        # Reshape Image
-        img = img.reshape((img.shape[0] * img.shape[1]), 3)
-
-        # Initiate KMeans Object
         estimator = KMeans(n_clusters=number_of_colors, random_state=0)
-
-        # Fit the image
         estimator.fit(img)
 
-        # Get Colour Information
         color_information = self.get_color_information(estimator.labels_, estimator.cluster_centers_, has_thresholding)
+
         return color_information
 
-    def plot_color_bar(self, color_information):
-        # Create a 500x100 black image
-        color_bar = np.zeros((100, 500, 3), dtype="uint8")
+    @staticmethod
+    def plot_color_bar(color_information):
+        """
+        Creates a color bar representation based on color information.
+
+        Args:
+            color_information (list): A list of dictionaries containing color information.
+
+        Returns:
+            numpy.ndarray: A color bar image.
+        """
+        color_bar = np.zeros((100, 500, 3), dtype=np.uint8)
 
         top_x = 0
-        for x in color_information:
-            bottom_x = top_x + (x["color_percentage"] * color_bar.shape[1])
+        for info in color_information:
+            color = tuple(map(int, info['color']))
+            bottom_x = int(top_x + round(info["color_percentage"] * color_bar.shape[1], 0))
 
-            color = tuple(map(int, (x['color'])))
-
-            cv2.rectangle(color_bar, (int(top_x), 0), (int(bottom_x), color_bar.shape[0]), color, -1)
+            cv2.rectangle(color_bar, (int(top_x), 0), (bottom_x, color_bar.shape[0]), color, -1)
             top_x = bottom_x
+
         return color_bar
 
     @staticmethod
     def plot_complementary_color_bar(color_information):
-        # Create a 500x100 black image
-        color_bar = np.zeros((100, 500, 3), dtype="uint8")
+        """
+        Creates a complementary color bar representation based on color information.
+
+        Args:
+            color_information (list): A list of dictionaries containing color information.
+
+        Returns:
+            numpy.ndarray: A complementary color bar image.
+        """
+        color_bar = np.zeros((100, 500, 3), dtype=np.uint8)
+        bar_height = color_bar.shape[0] // 4
 
         top_x = 0
-        for x in color_information:
-            bottom_x = top_x + (x["color_percentage"] * color_bar.shape[1])
+        for info in color_information:
+            color = tuple(map(int, info['color']))
+            bottom_x = int(top_x + round(info["color_percentage"] * color_bar.shape[1]))
 
-            color = tuple(map(int, (x['color'])))
-            # Calculate complementary colors
-            complementary_color = list(color)
-            complementary_color_1 = complementary_color.copy()
-            complementary_color_2 = complementary_color.copy()
-            complementary_color_3 = complementary_color.copy()
-            complementary_color_1[1] = 255 - complementary_color_1[1]
-            complementary_color_2[2] = 255 - complementary_color_2[2]
-            complementary_color_3[1] = 255 - complementary_color_3[1]
-            complementary_color_3[2] = 255 - complementary_color_3[2]
+            complementary_color_1 = [color[0], 255 - color[1], color[2]]
+            complementary_color_2 = [color[0], color[1], 255 - color[2]]
+            complementary_color_3 = [color[0], 255 - color[1], 255 - color[2]]
 
-            cv2.rectangle(color_bar, (int(top_x), 0), (int(bottom_x), (color_bar.shape[0] // 4) * 1), color, -1)
-            cv2.rectangle(color_bar, (int(top_x), (color_bar.shape[0] // 4) * 1), (int(bottom_x), color_bar.shape[0]),
-                          complementary_color_1, -1)
-            cv2.rectangle(color_bar, (int(top_x), (color_bar.shape[0] // 4) * 2), (int(bottom_x), color_bar.shape[0]),
-                          complementary_color_2, -1)
-            cv2.rectangle(color_bar, (int(top_x), (color_bar.shape[0] // 4) * 3), (int(bottom_x), color_bar.shape[0]),
-                          complementary_color_3, -1)
+            for i, comp_color in enumerate(
+                    [color, complementary_color_1, complementary_color_2, complementary_color_3]):
+                start_y = i * bar_height
+                end_y = (i + 1) * bar_height
+                cv2.rectangle(color_bar, (int(top_x), start_y), (bottom_x, end_y), comp_color, -1)
+
             top_x = bottom_x
+
         return color_bar
 
-    def draw_skin_colors_plot(self):
-        # Get Image
+    def draw_skin_colors_plot(self, num_dominant_colors=5):
+        """
+        Generates and saves a plot of dominant skin colors from the input image.
+
+        Args:
+            num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.
+        """
         image = cv2.imread(self.image, cv2.COLOR_BGR2RGB)
-        image = self.extract_face(image)
-
-        # Apply Skin Mask
-        skin = self.extract_skin(image)
-
-        # Find the dominant color. Default is 1 , pass the parameter 'number_of_colors=N' where N is the specified number of colors
-        dominant_colors = self.extract_dominant_color(skin, has_thresholding=True)
-        colour_bar = self.plot_color_bar(dominant_colors)
+        face = self.extract_face(image)
+        skin = self.extract_skin(face)
+        dominant_colors = self.extract_dominant_color(skin,
+                                                      number_of_colors=num_dominant_colors,
+                                                      has_thresholding=True)
+        color_bar = self.plot_color_bar(dominant_colors)
         plt.axis("off")
-        plt.imshow(colour_bar)
+        plt.imshow(color_bar)
         plt.savefig('temp/skin_colors.png', bbox_inches='tight')
         plt.close()
 
-    def draw_complentary_skin_colors_plot(self):
-        # Get Image
+    def draw_complementary_skin_colors_plot(self, num_dominant_colors=5):
+        """
+        Generates and saves a plot of complementary skin colors from the input image.
+
+        Args:
+            num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.
+        """
         image = cv2.imread(self.image, cv2.COLOR_BGR2RGB)
-        image = self.extract_face(image)
-
-        # Apply Skin Mask
-        skin = self.extract_skin(image)
-
-        # Find the dominant color. Default is 1 , pass the parameter 'number_of_colors=N' where N is the specified number of colors
-        dominant_colors = self.extract_dominant_color(skin, has_thresholding=True)
-        # print(dominant_colors)
-
-        # Show in the dominant color as bar
+        face = self.extract_face(image)
+        skin = self.extract_skin(face)
+        dominant_colors = self.extract_dominant_color(skin,
+                                                      number_of_colors=num_dominant_colors,
+                                                      has_thresholding=True)
         complementary_colour_bar = self.plot_complementary_color_bar(dominant_colors)
         plt.axis("off")
         plt.imshow(complementary_colour_bar)
