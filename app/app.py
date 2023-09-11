@@ -9,6 +9,7 @@ import json
 
 app = FastAPI()
 
+
 logger = logging.getLogger(__name__)
 logger_file_path = "logs/app.log"
 logging.basicConfig(
@@ -90,7 +91,7 @@ async def complementary_colors_info(file: UploadFile):
         else:
             logger.info(f"{fc_result}")
             return HTTPException(status_code=400, detail="Error while face detection")
-
+        return "ok"
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         return HTTPException(status_code=500, detail="Internal server error")
@@ -143,7 +144,7 @@ async def complementary_colors_bar(file: UploadFile):
         else:
             logger.info(f"{fc_result}")
             return error_response("Unknown error while face detection...")
-
+        return "ko"
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         return HTTPException(status_code=500, detail="Internal server error")

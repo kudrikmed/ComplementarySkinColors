@@ -59,9 +59,6 @@ protobuf==3.20.3
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pycparser==2.21
-pydantic==1.10.12
-pydantic_core==2.6.3
-pydentic==0.0.1.dev3
 Pygments==2.16.1
 pyparsing==3.0.9
 pytest==7.4.2
@@ -90,12 +87,10 @@ sphinxcontrib-jquery==4.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.6
 sphinxcontrib-serializinghtml==1.1.9
-starlette==0.27.0
 tensorboard==2.13.0
 tensorboard-data-server==0.7.1
 tensorflow==2.13.0
 tensorflow-estimator==2.13.0
-tensorflow-intel==2.13.0
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.3.0
 threadpoolctl==3.2.0

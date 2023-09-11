@@ -43,10 +43,20 @@ This endpoint handles the processing of uploaded images and generates complement
 
 - Accepts an image file in JPG format.
 
+- Example of image
+![FaceImage](tests/test.jpg)
+
 #### Response
 
-- Returns a PNG image file containing the generated complementary color map.
+- Returns a PNG image file containing the generated complementary color map, where the upper line - dominant colors of facial skin. Сolumn width corresponds to color percentage. And 3 lower lines - complementary colors.
 - In case of errors, it returns an error response.
+
+- Example of color map
+![ColorMap](tests/test.png)
+
+## Try
+
+- You can see the realisation in **[Telegram bot](https://t.me/BeautyScieneFaceAnalysisBot)**
 
 ## Usage
 
@@ -60,7 +70,7 @@ This endpoint handles the processing of uploaded images and generates complement
 
 1. Clone this repository.
 2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Run the FastAPI application using `uvicorn app:app --host 0.0.0.0 --port 8000` or by running `run.py` file.
+3. If you have difficulties launching `uvicorn` and `fastAPI` apps, run the file `run.py` in a development environment (for example `PyCharm`)
 4. Access the API at `http://localhost:8000`.
 
 ## Author

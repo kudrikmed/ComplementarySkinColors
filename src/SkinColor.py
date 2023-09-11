@@ -373,4 +373,3 @@ class SkinColor:
             complementary_colors.append(get_complementary_colors(color_info))
 
         return complementary_colors
-
