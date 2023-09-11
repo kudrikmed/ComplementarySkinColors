@@ -11,14 +11,12 @@ This project is a Complementary Skin Colors Map Generator that can be used in ma
 - **Complementary Color Map**: Based on the skin colors detected, the project generates a complementary color map.
 - **Error Handling**: Robust error handling is implemented to provide informative error messages to users.
 
-Technologies Used
-FastAPI: The project is built using FastAPI, a modern web framework for building APIs with Python.
-OpenCV: OpenCV is used for image processing.
-Mediapipe: Mediapipe is used for facial landmark detection, allowing for more precise face extraction.
-MTCNN: MTCNN (Multi-task Cascaded Convolutional Networks) is utilized for robust face detection, particularly useful in handling images with multiple faces.
-Logging: Logging is implemented to keep track of events and errors.
-JSON: JSON is used to format and return complementary color information.
-Matplotlib: Matplotlib is used to create the complementary color map.
+## Technologies Used
+
+- **FastAPI**: The project is built using FastAPI, a modern web framework for building APIs with Python.
+- **OpenCV**: OpenCV is used for image processing.
+- **Mediapipe**: Mediapipe is used for facial landmark detection, allowing for more precise face extraction.
+- **MTCNN**: MTCNN (Multi-task Cascaded Convolutional Networks) is utilized for robust face detection, particularly useful in handling images with multiple faces.
 
 ## Endpoints
 
