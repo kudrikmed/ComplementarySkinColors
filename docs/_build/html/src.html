@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src package &mdash; ComplementarySkinColors 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to ComplementarySkinColors’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ComplementarySkinColors
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">src package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.FaceCropper">src.FaceCropper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.FaceCropper.FaceCropper"><code class="docutils literal notranslate"><span class="pre">FaceCropper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.FaceCropper.FaceCropper.extract_face_from_image"><code class="docutils literal notranslate"><span class="pre">FaceCropper.extract_face_from_image()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.FaceExtractor">src.FaceExtractor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.FaceExtractor.FaceExtractor"><code class="docutils literal notranslate"><span class="pre">FaceExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.FaceExtractor.FaceExtractor.extract_face"><code class="docutils literal notranslate"><span class="pre">FaceExtractor.extract_face()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.SkinColor">src.SkinColor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.SkinColor.SkinColor"><code class="docutils literal notranslate"><span class="pre">SkinColor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.draw_complementary_skin_colors_plot"><code class="docutils literal notranslate"><span class="pre">SkinColor.draw_complementary_skin_colors_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.draw_skin_colors_plot"><code class="docutils literal notranslate"><span class="pre">SkinColor.draw_skin_colors_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.extract_dominant_color"><code class="docutils literal notranslate"><span class="pre">SkinColor.extract_dominant_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.extract_face"><code class="docutils literal notranslate"><span class="pre">SkinColor.extract_face()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.extract_skin"><code class="docutils literal notranslate"><span class="pre">SkinColor.extract_skin()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.get_color_information"><code class="docutils literal notranslate"><span class="pre">SkinColor.get_color_information()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.get_colors"><code class="docutils literal notranslate"><span class="pre">SkinColor.get_colors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.image"><code class="docutils literal notranslate"><span class="pre">SkinColor.image</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.make_complementary_color"><code class="docutils literal notranslate"><span class="pre">SkinColor.make_complementary_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.plot_color_bar"><code class="docutils literal notranslate"><span class="pre">SkinColor.plot_color_bar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.plot_complementary_color_bar"><code class="docutils literal notranslate"><span class="pre">SkinColor.plot_complementary_color_bar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinColor.SkinColor.remove_black"><code class="docutils literal notranslate"><span class="pre">SkinColor.remove_black()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.SkinExtractor">src.SkinExtractor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor"><code class="docutils literal notranslate"><span class="pre">SkinExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.clean_skin_mask"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.clean_skin_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.convert_to_bgr"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.convert_to_bgr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.convert_to_hsv"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.convert_to_hsv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.create_skin_mask"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.create_skin_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.define_skin_thresholds"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.define_skin_thresholds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.SkinExtractor.SkinExtractor.extract_skin"><code class="docutils literal notranslate"><span class="pre">SkinExtractor.extract_skin()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ComplementarySkinColors</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">src package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-src.FaceCropper">
+<span id="src-facecropper-module"></span><h2>src.FaceCropper module<a class="headerlink" href="#module-src.FaceCropper" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.FaceCropper.FaceCropper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.FaceCropper.</span></span><span class="sig-name descname"><span class="pre">FaceCropper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_crop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'face.jpg'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/FaceCropper.html#FaceCropper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.FaceCropper.FaceCropper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for extracting and cropping a human face from an input image using MTCNN face detection.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>image_path (str): The path to the input image.
+save_crop (str): The filename to save the cropped face image. Default is “face.jpg”.</p>
+</dd>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>extract_face_from_image(self) -&gt; int:</dt><dd><p>Extracts a face from the input image, saves it, and returns a status code.</p>
+</dd>
+</dl>
+</dd>
+<dt>Example Usage:</dt><dd><p># Create a FaceCropper instance
+cropper = FaceCropper(“input_image.jpg”)</p>
+<p># Perform face extraction and check the result code
+result_code = cropper.extract_face_from_image()</p>
+<dl class="simple">
+<dt>if result_code == 1:</dt><dd><p>print(“Face extracted and saved successfully.”)</p>
+</dd>
+<dt>elif result_code == 0:</dt><dd><p>print(“No faces were detected in the input image.”)</p>
+</dd>
+<dt>elif result_code == 2:</dt><dd><p>print(“Multiple faces were detected in the input image.”)</p>
+</dd>
+<dt>else:</dt><dd><p>print(“An error occurred during face extraction.”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.FaceCropper.FaceCropper.extract_face_from_image">
+<span class="sig-name descname"><span class="pre">extract_face_from_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/FaceCropper.html#FaceCropper.extract_face_from_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.FaceCropper.FaceCropper.extract_face_from_image" title="Link to this definition"></a></dt>
+<dd><p>Extracts a face from the input image using MTCNN and saves it as an image file.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>int: A status code indicating the result of the extraction process.</dt><dd><ul class="simple">
+<li><p>1: Face successfully extracted and saved.</p></li>
+<li><p>0: No faces detected in the input image.</p></li>
+<li><p>2: Multiple faces detected in the input image.</p></li>
+<li><p>-1: An error occurred during face extraction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.FaceExtractor">
+<span id="src-faceextractor-module"></span><h2>src.FaceExtractor module<a class="headerlink" href="#module-src.FaceExtractor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.FaceExtractor.FaceExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.FaceExtractor.</span></span><span class="sig-name descname"><span class="pre">FaceExtractor</span></span><a class="reference internal" href="_modules/src/FaceExtractor.html#FaceExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.FaceExtractor.FaceExtractor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for extracting a face region from an input image using the mediapipe FaceMesh model.</p>
+<dl>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>extract_face(image) -&gt; numpy.ndarray:</dt><dd><p>Extracts and returns the face region from the input image.</p>
+</dd>
+</dl>
+</dd>
+<dt>Static Methods:</dt><dd><p>None</p>
+</dd>
+<dt>Example Usage:</dt><dd><p># Create a FaceExtractor instance
+extractor = FaceExtractor()</p>
+<p># Load an input image
+input_image = cv2.imread(“input_image.jpg”)</p>
+<p># Extract the face from the input image
+face_image = extractor.extract_face(input_image)</p>
+<p># Display or save the extracted face image as needed
+cv2.imshow(“Face Image”, face_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.FaceExtractor.FaceExtractor.extract_face">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/FaceExtractor.html#FaceExtractor.extract_face"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.FaceExtractor.FaceExtractor.extract_face" title="Link to this definition"></a></dt>
+<dd><p>Extracts a face region from the input image using the FaceMesh model.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image (numpy.ndarray): The input image in BGR color space.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: The extracted face region in BGR color space.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.SkinColor">
+<span id="src-skincolor-module"></span><h2>src.SkinColor module<a class="headerlink" href="#module-src.SkinColor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.SkinColor.</span></span><span class="sig-name descname"><span class="pre">SkinColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for extracting and analyzing dominant skin colors from an input image.</p>
+<dl>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>extract_dominant_color(image, number_of_colors=5, has_thresholding=False) -&gt; list:</dt><dd><p>Extracts and returns dominant skin colors from the input image.</p>
+</dd>
+<dt>plot_color_bar(color_information) -&gt; numpy.ndarray:</dt><dd><p>Creates a color bar representation based on color information.</p>
+</dd>
+<dt>plot_complementary_color_bar(color_information) -&gt; numpy.ndarray:</dt><dd><p>Creates a complementary color bar representation based on color information.</p>
+</dd>
+<dt>draw_skin_colors_plot(num_dominant_colors=5):</dt><dd><p>Generates and saves a plot of dominant skin colors from the input image.</p>
+</dd>
+<dt>draw_complementary_skin_colors_plot(num_dominant_colors=5):</dt><dd><p>Generates and saves a plot of complementary skin colors from the input image.</p>
+</dd>
+</dl>
+</dd>
+<dt>Static Methods:</dt><dd><dl class="simple">
+<dt>extract_face(image) -&gt; numpy.ndarray:</dt><dd><p>Extracts and returns the face region from the input image.</p>
+</dd>
+<dt>extract_skin(image) -&gt; numpy.ndarray:</dt><dd><p>Extracts and returns the skin region from the input image.</p>
+</dd>
+<dt>remove_black(estimator_labels, estimator_cluster) -&gt; (Counter, numpy.ndarray, bool):</dt><dd><p>Removes black color from the cluster and updates occurrence and cluster accordingly.</p>
+</dd>
+<dt>get_color_information(estimator_labels, estimator_cluster, has_thresholding=False) -&gt; list:</dt><dd><p>Retrieves and returns color information based on cluster labels and cluster centers.</p>
+</dd>
+</dl>
+</dd>
+<dt>Example Usage:</dt><dd><p># Create a SkinColor instance with an input image
+skin_color = SkinColor(“input_image.jpg”)</p>
+<p># Generate a plot of dominant skin colors
+skin_color.draw_skin_colors_plot()</p>
+<p># Generate a plot of complementary skin colors
+skin_color.draw_complementary_skin_colors_plot()</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.draw_complementary_skin_colors_plot">
+<span class="sig-name descname"><span class="pre">draw_complementary_skin_colors_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_dominant_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.draw_complementary_skin_colors_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.draw_complementary_skin_colors_plot" title="Link to this definition"></a></dt>
+<dd><p>Generates and saves a plot of complementary skin colors from the input image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.draw_skin_colors_plot">
+<span class="sig-name descname"><span class="pre">draw_skin_colors_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_dominant_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.draw_skin_colors_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.draw_skin_colors_plot" title="Link to this definition"></a></dt>
+<dd><p>Generates and saves a plot of dominant skin colors from the input image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.extract_dominant_color">
+<span class="sig-name descname"><span class="pre">extract_dominant_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_thresholding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.extract_dominant_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.extract_dominant_color" title="Link to this definition"></a></dt>
+<dd><p>Extracts and returns dominant skin colors from the input image.</p>
+<dl>
+<dt>Args:</dt><dd><p>image (numpy.ndarray): The input image in BGR color space.
+number_of_colors (int, optional): The number of dominant colors to extract. Default is 5.
+has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.</p>
+<blockquote>
+<div><p>Default is False.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>list: A list of dictionaries containing information about dominant skin colors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.extract_face">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.extract_face"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.extract_face" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.extract_skin">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_skin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.extract_skin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.extract_skin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.get_color_information">
+<span class="sig-name descname"><span class="pre">get_color_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_thresholding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.get_color_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.get_color_information" title="Link to this definition"></a></dt>
+<dd><p>Retrieves color information based on cluster labels and cluster centers.</p>
+<dl>
+<dt>Args:</dt><dd><p>estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.
+estimator_cluster (numpy.ndarray): The cluster centers representing color values.
+has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.</p>
+<blockquote>
+<div><p>Default is False.</p>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>list: A list of dictionaries containing information about dominant colors, including:</dt><dd><ul class="simple">
+<li><p>‘cluster_index’ (int): Index of the color cluster.</p></li>
+<li><p>‘color’ (list): RGB color values.</p></li>
+<li><p>‘color_percentage’ (float): Percentage of pixels with the dominant color.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>If <cite>has_thresholding</cite> is set to True and black color is removed, the ‘cluster_index’ values
+are adjusted accordingly to maintain consistency with the original cluster labeling.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.get_colors">
+<span class="sig-name descname"><span class="pre">get_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_dominant_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.get_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.get_colors" title="Link to this definition"></a></dt>
+<dd><p>Extract dominant and complementary colors from an image of a face with optional thresholding.</p>
+<dl>
+<dt>Args:</dt><dd><p>num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>list: A list of dictionaries, each containing information about a dominant color and its complementary colors.</dt><dd><p>Each dictionary has the following keys:
+- ‘cluster_index’: The cluster index of the dominant color.
+- ‘original_color’: The original RGB color value as a tuple.
+- ‘color_percentage’: The percentage of the original color in the image.
+- ‘complement_color_scheme_invert_green’: Complementary color using the “invert_green” scheme as an RGB tuple.
+- ‘complement_color_scheme_invert_blue’: Complementary color using the “invert_blue” scheme as an RGB tuple.
+- ‘complement_color_scheme_invert_green_blue’: Complementary color using the “invert_green_blue” scheme as an RGB tuple.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>This function processes an image of a face to extract dominant colors and their complementary colors.
+It uses various internal methods such as ‘extract_face’, ‘extract_skin’, ‘extract_dominant_color’, and ‘make_complementary_color’.
+The ‘num_dominant_colors’ parameter controls the number of dominant colors to extract from the image.
+Complementary colors are calculated using three different color schemes: “invert_green,” “invert_blue,” and “invert_green_blue.”</p>
+</dd>
+<dt>Example:</dt><dd><p># Create an instance of the class
+face_color_extractor = FaceColorExtractor(‘path_to_image.jpg’)</p>
+<p># Get dominant and complementary colors
+dominant_and_complementary_colors = face_color_extractor.get_colors(num_dominant_colors=5)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.image">
+<span class="sig-name descname"><span class="pre">image</span></span><a class="headerlink" href="#src.SkinColor.SkinColor.image" title="Link to this definition"></a></dt>
+<dd><p>Initializes a SkinColor instance with the input image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image (str): The path to the input image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.make_complementary_color">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_complementary_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.make_complementary_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.make_complementary_color" title="Link to this definition"></a></dt>
+<dd><p>Calculate and return the complementary color of the given color based on the specified scheme.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>color (list[int]): A list representing the RGB color to calculate the complementary color for.</dt><dd><p>It should contain three integer values between 0 and 255, inclusive, representing
+the red, green, and blue components of the color.</p>
+</dd>
+<dt>scheme (str): A string specifying the color transformation scheme. Supported schemes are:</dt><dd><ul class="simple">
+<li><p>“invert_green”: Inverts the green component of the color.</p></li>
+<li><p>“invert_blue”: Inverts the blue component of the color.</p></li>
+<li><p>“invert_green_blue”: Inverts both the green and blue components of the color.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>list[int]: A list representing the RGB values of the complementary color.</dt><dd><p>The returned list will have the same format as the input color.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>If an unsupported or invalid scheme is provided, the function will return the original color unchanged.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">complementary_color</span> <span class="o">=</span> <span class="n">MyClass</span><span class="o">.</span><span class="n">make_complementary_color</span><span class="p">(</span><span class="n">original_color</span><span class="p">,</span> <span class="s2">&quot;invert_green_blue&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">complementary_color</span><span class="p">)</span>
+<span class="go">[255, 127, 191]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.plot_color_bar">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_color_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_information</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.plot_color_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.plot_color_bar" title="Link to this definition"></a></dt>
+<dd><p>Creates a color bar representation based on color information.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>color_information (list): A list of dictionaries containing color information.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: A color bar image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.plot_complementary_color_bar">
+<span class="sig-name descname"><span class="pre">plot_complementary_color_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_information</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.plot_complementary_color_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.plot_complementary_color_bar" title="Link to this definition"></a></dt>
+<dd><p>Creates a complementary color bar representation based on color information.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>color_information (list): A list of dictionaries containing color information.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: A complementary color bar image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinColor.SkinColor.remove_black">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_black</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_cluster</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinColor.html#SkinColor.remove_black"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinColor.SkinColor.remove_black" title="Link to this definition"></a></dt>
+<dd><p>Removes black color from the cluster and updates occurrence and cluster accordingly.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.
+estimator_cluster (numpy.ndarray): The cluster centers representing color values.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Tuple[Counter, numpy.ndarray, bool]: A tuple containing:</dt><dd><ul class="simple">
+<li><p>Counter: Occurrence of each color label.</p></li>
+<li><p>numpy.ndarray: Updated cluster centers after black color removal.</p></li>
+<li><p>bool: Whether black color was found and removed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.SkinExtractor">
+<span id="src-skinextractor-module"></span><h2>src.SkinExtractor module<a class="headerlink" href="#module-src.SkinExtractor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.SkinExtractor.</span></span><span class="sig-name descname"><span class="pre">SkinExtractor</span></span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for extracting skin regions from an input image based on color analysis in the HSV color space.</p>
+<dl>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>extract_skin(image) -&gt; numpy.ndarray:</dt><dd><p>Extracts the skin regions from the input image and returns the skin image in BGR color space.</p>
+</dd>
+</dl>
+</dd>
+<dt>Static Methods:</dt><dd><dl class="simple">
+<dt>convert_to_hsv(image) -&gt; numpy.ndarray:</dt><dd><p>Converts an input image from the BGR color space to the HSV color space.</p>
+</dd>
+<dt>define_skin_thresholds() -&gt; (numpy.ndarray, numpy.ndarray):</dt><dd><p>Defines the lower and upper HSV color thresholds for detecting skin color.</p>
+</dd>
+<dt>create_skin_mask(image_hsv, lower_threshold, upper_threshold) -&gt; numpy.ndarray:</dt><dd><p>Creates a binary mask indicating the presence of skin colors in the HSV image.</p>
+</dd>
+<dt>clean_skin_mask(mask) -&gt; numpy.ndarray:</dt><dd><p>Cleans up the binary mask using Gaussian blur.</p>
+</dd>
+<dt>convert_to_bgr(image_hsv) -&gt; numpy.ndarray:</dt><dd><p>Converts an HSV image back to the BGR color space.</p>
+</dd>
+</dl>
+</dd>
+<dt>Example Usage:</dt><dd><p># Create a SkinExtractor instance
+extractor = SkinExtractor()</p>
+<p># Load an input image
+input_image = cv2.imread(“input_image.jpg”)</p>
+<p># Extract skin regions from the input image
+skin_image = extractor.extract_skin(input_image)</p>
+<p># Display or save the skin image as needed
+cv2.imshow(“Skin Image”, skin_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.clean_skin_mask">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_skin_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.clean_skin_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.clean_skin_mask" title="Link to this definition"></a></dt>
+<dd><p>Cleans up the binary mask using Gaussian blur.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>mask (numpy.ndarray): A binary mask.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: The cleaned binary mask.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.convert_to_bgr">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_to_bgr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_hsv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.convert_to_bgr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.convert_to_bgr" title="Link to this definition"></a></dt>
+<dd><p>Converts an HSV image back to the BGR color space.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image_hsv (numpy.ndarray): The input image in HSV color space.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: The input image converted to BGR color space.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.convert_to_hsv">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_to_hsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.convert_to_hsv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.convert_to_hsv" title="Link to this definition"></a></dt>
+<dd><p>Converts an input image from the BGR color space to the HSV color space.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image (numpy.ndarray): The input image in BGR color space.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: The input image converted to HSV color space.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.create_skin_mask">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_skin_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_hsv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.create_skin_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.create_skin_mask" title="Link to this definition"></a></dt>
+<dd><p>Creates a binary mask indicating the presence of skin colors in the HSV image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image_hsv (numpy.ndarray): The input image in HSV color space.
+lower_threshold (numpy.ndarray): The lower HSV color threshold for skin detection.
+upper_threshold (numpy.ndarray): The upper HSV color threshold for skin detection.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: A binary mask indicating skin regions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.define_skin_thresholds">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define_skin_thresholds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.define_skin_thresholds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.define_skin_thresholds" title="Link to this definition"></a></dt>
+<dd><p>Defines the lower and upper HSV color thresholds for detecting skin color.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>tuple: A tuple containing the lower and upper threshold numpy arrays.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.SkinExtractor.SkinExtractor.extract_skin">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_skin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/SkinExtractor.html#SkinExtractor.extract_skin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.SkinExtractor.SkinExtractor.extract_skin" title="Link to this definition"></a></dt>
+<dd><p>Extracts skin regions from the input image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image (numpy.ndarray): The input image in BGR color space.</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: The skin image in BGR color space.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to ComplementarySkinColors’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dzmitry Kudrytski.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

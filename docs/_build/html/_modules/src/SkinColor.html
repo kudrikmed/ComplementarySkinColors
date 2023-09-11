@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.SkinColor &mdash; ComplementarySkinColors 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ComplementarySkinColors
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html">src package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ComplementarySkinColors</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.SkinColor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.SkinColor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">src.SkinExtractor</span> <span class="kn">import</span> <span class="n">SkinExtractor</span>
+<span class="kn">from</span> <span class="nn">src.FaceExtractor</span> <span class="kn">import</span> <span class="n">FaceExtractor</span>
+
+
+<div class="viewcode-block" id="SkinColor">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor">[docs]</a>
+<span class="k">class</span> <span class="nc">SkinColor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for extracting and analyzing dominant skin colors from an input image.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        extract_dominant_color(image, number_of_colors=5, has_thresholding=False) -&gt; list:</span>
+<span class="sd">            Extracts and returns dominant skin colors from the input image.</span>
+
+<span class="sd">        plot_color_bar(color_information) -&gt; numpy.ndarray:</span>
+<span class="sd">            Creates a color bar representation based on color information.</span>
+
+<span class="sd">        plot_complementary_color_bar(color_information) -&gt; numpy.ndarray:</span>
+<span class="sd">            Creates a complementary color bar representation based on color information.</span>
+
+<span class="sd">        draw_skin_colors_plot(num_dominant_colors=5):</span>
+<span class="sd">            Generates and saves a plot of dominant skin colors from the input image.</span>
+
+<span class="sd">        draw_complementary_skin_colors_plot(num_dominant_colors=5):</span>
+<span class="sd">            Generates and saves a plot of complementary skin colors from the input image.</span>
+
+<span class="sd">    Static Methods:</span>
+<span class="sd">        extract_face(image) -&gt; numpy.ndarray:</span>
+<span class="sd">            Extracts and returns the face region from the input image.</span>
+
+<span class="sd">        extract_skin(image) -&gt; numpy.ndarray:</span>
+<span class="sd">            Extracts and returns the skin region from the input image.</span>
+
+<span class="sd">        remove_black(estimator_labels, estimator_cluster) -&gt; (Counter, numpy.ndarray, bool):</span>
+<span class="sd">            Removes black color from the cluster and updates occurrence and cluster accordingly.</span>
+
+<span class="sd">        get_color_information(estimator_labels, estimator_cluster, has_thresholding=False) -&gt; list:</span>
+<span class="sd">            Retrieves and returns color information based on cluster labels and cluster centers.</span>
+
+<span class="sd">    Example Usage:</span>
+<span class="sd">        # Create a SkinColor instance with an input image</span>
+<span class="sd">        skin_color = SkinColor(&quot;input_image.jpg&quot;)</span>
+
+<span class="sd">        # Generate a plot of dominant skin colors</span>
+<span class="sd">        skin_color.draw_skin_colors_plot()</span>
+
+<span class="sd">        # Generate a plot of complementary skin colors</span>
+<span class="sd">        skin_color.draw_complementary_skin_colors_plot()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a SkinColor instance with the input image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image (str): The path to the input image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SkinColor.extract_face">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.extract_face">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">extract_face</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="n">FaceExtractor</span><span class="o">.</span><span class="n">extract_face</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">face</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.extract_skin">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.extract_skin">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">extract_skin</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="n">skin</span> <span class="o">=</span> <span class="n">SkinExtractor</span><span class="o">.</span><span class="n">extract_skin</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">skin</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.remove_black">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.remove_black">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">remove_black</span><span class="p">(</span><span class="n">estimator_labels</span><span class="p">,</span> <span class="n">estimator_cluster</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes black color from the cluster and updates occurrence and cluster accordingly.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.</span>
+<span class="sd">            estimator_cluster (numpy.ndarray): The cluster centers representing color values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[Counter, numpy.ndarray, bool]: A tuple containing:</span>
+<span class="sd">                - Counter: Occurrence of each color label.</span>
+<span class="sd">                - numpy.ndarray: Updated cluster centers after black color removal.</span>
+<span class="sd">                - bool: Whether black color was found and removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the total number of occurrences for each color</span>
+        <span class="n">occurrence_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">estimator_labels</span><span class="p">)</span>
+
+        <span class="c1"># Iterate over the most common occurring colors</span>
+        <span class="k">for</span> <span class="n">color_index</span><span class="p">,</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">occurrence_counter</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">estimator_cluster</span><span class="p">))):</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">estimator_cluster</span><span class="p">[</span><span class="n">color_index</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="c1"># Check if the color is [0, 0, 0] (black)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">color</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+                <span class="c1"># Delete the occurrence</span>
+                <span class="k">del</span> <span class="n">occurrence_counter</span><span class="p">[</span><span class="n">color_index</span><span class="p">]</span>
+                <span class="c1"># Remove the cluster</span>
+                <span class="n">estimator_cluster</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">estimator_cluster</span><span class="p">,</span> <span class="n">color_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">occurrence_counter</span><span class="p">,</span> <span class="n">estimator_cluster</span><span class="p">,</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">occurrence_counter</span><span class="p">,</span> <span class="n">estimator_cluster</span><span class="p">,</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.get_color_information">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.get_color_information">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_color_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_labels</span><span class="p">,</span> <span class="n">estimator_cluster</span><span class="p">,</span> <span class="n">has_thresholding</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves color information based on cluster labels and cluster centers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            estimator_labels (numpy.ndarray): The cluster labels assigned by KMeans.</span>
+<span class="sd">            estimator_cluster (numpy.ndarray): The cluster centers representing color values.</span>
+<span class="sd">            has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.</span>
+<span class="sd">                Default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of dictionaries containing information about dominant colors, including:</span>
+<span class="sd">                - &#39;cluster_index&#39; (int): Index of the color cluster.</span>
+<span class="sd">                - &#39;color&#39; (list): RGB color values.</span>
+<span class="sd">                - &#39;color_percentage&#39; (float): Percentage of pixels with the dominant color.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If `has_thresholding` is set to True and black color is removed, the &#39;cluster_index&#39; values</span>
+<span class="sd">            are adjusted accordingly to maintain consistency with the original cluster labeling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">color_information</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">has_thresholding</span><span class="p">:</span>
+            <span class="n">occurrence</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">has_black</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_black</span><span class="p">(</span><span class="n">estimator_labels</span><span class="p">,</span> <span class="n">estimator_cluster</span><span class="p">)</span>
+            <span class="n">occurrence_counter</span> <span class="o">=</span> <span class="n">occurrence</span>
+            <span class="n">estimator_cluster</span> <span class="o">=</span> <span class="n">cluster</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">occurrence_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">estimator_labels</span><span class="p">)</span>
+
+        <span class="n">total_occurrence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">occurrence_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">occurrence_counter</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">estimator_cluster</span><span class="p">)):</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">has_thresholding</span> <span class="ow">and</span> <span class="n">has_black</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">color</span> <span class="o">=</span> <span class="n">estimator_cluster</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">color_percentage</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_occurrence</span>
+
+            <span class="n">color_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;cluster_index&quot;</span><span class="p">:</span> <span class="n">index</span><span class="p">,</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
+                <span class="s2">&quot;color_percentage&quot;</span><span class="p">:</span> <span class="n">color_percentage</span>
+            <span class="p">}</span>
+
+            <span class="n">color_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">color_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">color_information</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.extract_dominant_color">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.extract_dominant_color">[docs]</a>
+    <span class="k">def</span> <span class="nf">extract_dominant_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">number_of_colors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">has_thresholding</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts and returns dominant skin colors from the input image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image (numpy.ndarray): The input image in BGR color space.</span>
+<span class="sd">            number_of_colors (int, optional): The number of dominant colors to extract. Default is 5.</span>
+<span class="sd">            has_thresholding (bool, optional): Whether to apply color thresholding to exclude black color.</span>
+<span class="sd">                Default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of dictionaries containing information about dominant skin colors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">has_thresholding</span><span class="p">:</span>
+            <span class="n">number_of_colors</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">estimator</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">number_of_colors</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+        <span class="n">color_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_color_information</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">labels_</span><span class="p">,</span> <span class="n">estimator</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">,</span> <span class="n">has_thresholding</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">color_information</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.plot_color_bar">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.plot_color_bar">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">plot_color_bar</span><span class="p">(</span><span class="n">color_information</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a color bar representation based on color information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color_information (list): A list of dictionaries containing color information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: A color bar image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">color_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+        <span class="n">top_x</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">color_information</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]))</span>
+            <span class="n">bottom_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">top_x</span> <span class="o">+</span> <span class="nb">round</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;color_percentage&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">color_bar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">color_bar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">top_x</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">bottom_x</span><span class="p">,</span> <span class="n">color_bar</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">top_x</span> <span class="o">=</span> <span class="n">bottom_x</span>
+
+        <span class="k">return</span> <span class="n">color_bar</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.make_complementary_color">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.make_complementary_color">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">make_complementary_color</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">scheme</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and return the complementary color of the given color based on the specified scheme.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color (list[int]): A list representing the RGB color to calculate the complementary color for.</span>
+<span class="sd">                               It should contain three integer values between 0 and 255, inclusive, representing</span>
+<span class="sd">                               the red, green, and blue components of the color.</span>
+<span class="sd">            scheme (str): A string specifying the color transformation scheme. Supported schemes are:</span>
+<span class="sd">                          - &quot;invert_green&quot;: Inverts the green component of the color.</span>
+<span class="sd">                          - &quot;invert_blue&quot;: Inverts the blue component of the color.</span>
+<span class="sd">                          - &quot;invert_green_blue&quot;: Inverts both the green and blue components of the color.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[int]: A list representing the RGB values of the complementary color.</span>
+<span class="sd">                       The returned list will have the same format as the input color.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If an unsupported or invalid scheme is provided, the function will return the original color unchanged.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; original_color = [255, 128, 64]</span>
+<span class="sd">            &gt;&gt;&gt; complementary_color = MyClass.make_complementary_color(original_color, &quot;invert_green_blue&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; print(complementary_color)</span>
+<span class="sd">            [255, 127, 191]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schemes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;invert_green&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+            <span class="s2">&quot;invert_blue&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+            <span class="s2">&quot;invert_green_blue&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">schemes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.plot_complementary_color_bar">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.plot_complementary_color_bar">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot_complementary_color_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_information</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a complementary color bar representation based on color information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color_information (list): A list of dictionaries containing color information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: A complementary color bar image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize the color bar image</span>
+        <span class="n">color_bar_height</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">color_bar_width</span> <span class="o">=</span> <span class="mi">500</span>
+        <span class="n">color_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">color_bar_height</span><span class="p">,</span> <span class="n">color_bar_width</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">bar_height</span> <span class="o">=</span> <span class="n">color_bar_height</span> <span class="o">//</span> <span class="mi">4</span>
+
+        <span class="n">top_x</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Iterate through color information</span>
+        <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">color_information</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]))</span>
+            <span class="n">bottom_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">top_x</span> <span class="o">+</span> <span class="nb">round</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;color_percentage&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">color_bar_width</span><span class="p">))</span>
+
+            <span class="c1"># Define color schemes</span>
+            <span class="n">color_schemes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;original&quot;</span><span class="p">,</span> <span class="s2">&quot;invert_green&quot;</span><span class="p">,</span> <span class="s2">&quot;invert_blue&quot;</span><span class="p">,</span> <span class="s2">&quot;invert_green_blue&quot;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">scheme</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">color_schemes</span><span class="p">):</span>
+                <span class="n">start_y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">bar_height</span>
+                <span class="n">end_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">bar_height</span>
+                <span class="k">if</span> <span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;original&quot;</span><span class="p">:</span>
+                    <span class="n">comp_color</span> <span class="o">=</span> <span class="n">color</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">comp_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_complementary_color</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">)</span>
+                <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">color_bar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">top_x</span><span class="p">),</span> <span class="n">start_y</span><span class="p">),</span> <span class="p">(</span><span class="n">bottom_x</span><span class="p">,</span> <span class="n">end_y</span><span class="p">),</span> <span class="n">comp_color</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">top_x</span> <span class="o">=</span> <span class="n">bottom_x</span>
+
+        <span class="k">return</span> <span class="n">color_bar</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.draw_skin_colors_plot">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.draw_skin_colors_plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_skin_colors_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_dominant_colors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates and saves a plot of dominant skin colors from the input image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_face</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">skin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_skin</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+        <span class="n">dominant_colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_dominant_color</span><span class="p">(</span><span class="n">skin</span><span class="p">,</span>
+                                                      <span class="n">number_of_colors</span><span class="o">=</span><span class="n">num_dominant_colors</span><span class="p">,</span>
+                                                      <span class="n">has_thresholding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">color_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_color_bar</span><span class="p">(</span><span class="n">dominant_colors</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">color_bar</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;temp/skin_colors.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.draw_complementary_skin_colors_plot">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.draw_complementary_skin_colors_plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_complementary_skin_colors_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_dominant_colors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates and saves a plot of complementary skin colors from the input image.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_face</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">skin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_skin</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+        <span class="n">dominant_colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_dominant_color</span><span class="p">(</span><span class="n">skin</span><span class="p">,</span>
+                                                      <span class="n">number_of_colors</span><span class="o">=</span><span class="n">num_dominant_colors</span><span class="p">,</span>
+                                                      <span class="n">has_thresholding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">complementary_colour_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_complementary_color_bar</span><span class="p">(</span><span class="n">dominant_colors</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complementary_colour_bar</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;temp/complementary_skin_colors.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SkinColor.get_colors">
+<a class="viewcode-back" href="../../src.html#src.SkinColor.SkinColor.get_colors">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_dominant_colors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          Extract dominant and complementary colors from an image of a face with optional thresholding.</span>
+
+<span class="sd">          Args:</span>
+<span class="sd">              num_dominant_colors (int, optional): The number of dominant colors to extract. Default is 5.</span>
+
+<span class="sd">          Returns:</span>
+<span class="sd">              list: A list of dictionaries, each containing information about a dominant color and its complementary colors.</span>
+<span class="sd">                  Each dictionary has the following keys:</span>
+<span class="sd">                  - &#39;cluster_index&#39;: The cluster index of the dominant color.</span>
+<span class="sd">                  - &#39;original_color&#39;: The original RGB color value as a tuple.</span>
+<span class="sd">                  - &#39;color_percentage&#39;: The percentage of the original color in the image.</span>
+<span class="sd">                  - &#39;complement_color_scheme_invert_green&#39;: Complementary color using the &quot;invert_green&quot; scheme as an RGB tuple.</span>
+<span class="sd">                  - &#39;complement_color_scheme_invert_blue&#39;: Complementary color using the &quot;invert_blue&quot; scheme as an RGB tuple.</span>
+<span class="sd">                  - &#39;complement_color_scheme_invert_green_blue&#39;: Complementary color using the &quot;invert_green_blue&quot; scheme as an RGB tuple.</span>
+
+<span class="sd">          Note:</span>
+<span class="sd">              This function processes an image of a face to extract dominant colors and their complementary colors.</span>
+<span class="sd">              It uses various internal methods such as &#39;extract_face&#39;, &#39;extract_skin&#39;, &#39;extract_dominant_color&#39;, and &#39;make_complementary_color&#39;.</span>
+<span class="sd">              The &#39;num_dominant_colors&#39; parameter controls the number of dominant colors to extract from the image.</span>
+<span class="sd">              Complementary colors are calculated using three different color schemes: &quot;invert_green,&quot; &quot;invert_blue,&quot; and &quot;invert_green_blue.&quot;</span>
+
+<span class="sd">          Example:</span>
+<span class="sd">              # Create an instance of the class</span>
+<span class="sd">              face_color_extractor = FaceColorExtractor(&#39;path_to_image.jpg&#39;)</span>
+
+<span class="sd">              # Get dominant and complementary colors</span>
+<span class="sd">              dominant_and_complementary_colors = face_color_extractor.get_colors(num_dominant_colors=5)</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_face</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">skin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_skin</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+        <span class="n">dominant_colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_dominant_color</span><span class="p">(</span><span class="n">skin</span><span class="p">,</span>
+                                                      <span class="n">number_of_colors</span><span class="o">=</span><span class="n">num_dominant_colors</span><span class="p">,</span>
+                                                      <span class="n">has_thresholding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">complementary_colors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">get_complementary_colors</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+
+            <span class="n">schemes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;invert_green&quot;</span><span class="p">,</span> <span class="s2">&quot;invert_blue&quot;</span><span class="p">,</span> <span class="s2">&quot;invert_green_blue&quot;</span><span class="p">]</span>
+            <span class="n">complementary_colors_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;cluster_index&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">[</span><span class="s1">&#39;cluster_index&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;original_color&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">color</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;color_percentage&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">[</span><span class="s1">&#39;color_percentage&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+            <span class="k">for</span> <span class="n">scheme</span> <span class="ow">in</span> <span class="n">schemes</span><span class="p">:</span>
+                <span class="n">complement_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_complementary_color</span><span class="p">(</span><span class="n">color</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">)</span>
+                <span class="n">complement_color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">complement_color</span><span class="p">))</span>
+                <span class="n">complementary_colors_info</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;complement_color_scheme_</span><span class="si">{</span><span class="n">scheme</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">complement_color</span>
+
+            <span class="k">return</span> <span class="n">complementary_colors_info</span>
+
+        <span class="k">for</span> <span class="n">color_info</span> <span class="ow">in</span> <span class="n">dominant_colors</span><span class="p">:</span>
+            <span class="n">complementary_colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_complementary_colors</span><span class="p">(</span><span class="n">color_info</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">complementary_colors</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dzmitry Kudrytski.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
